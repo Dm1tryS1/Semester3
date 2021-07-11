@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <title>Магазин "Все для Дома"</title>
+        <link href="http://e-learning.bmstu.ru/moodle/pluginfile.php/7546/mod_folder/content/0/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            html {position: relative; min-height: 100%;}    
+            body {margin-bottom: 40px;} 
+            main {margin-top: 20px;}
+            footer {height: 40px; position: absolute;bottom: 0; width: 100%;}
+            .my-primary {background-color:#FF9900 ; color: white;}
+            .mybg1 {background-color:#FFC773;margin-bottom: 40px; height: 200px}
+            .mybg2 {background-color:#FFC773;}
+            table, tr, td, th{border: 3px solid #0D58A6;}
+            .mybutton{width:250px}
+        </style>
+
+        <script>
+            function AddAssortment()
+            {
+                let aCost;
+                let aName;
+                let arow;
+                let atd1;
+                let atd2;
+                let atd3;
+
+                let alist = document.getElementById("assortment");
+
+                let acheck=1;
+
+                aCost = document.getElementById("cost");
+                aName = document.getElementById("name");
+
+                if((aName.value!='') && (aCost.value!='') && (Number(aCost.value)>0))
+                {
+                    let i=2;
+                    let anubmerofrows=alist.rows.length;
+                    while ((i<anubmerofrows) && (acheck==1))
+                    {
+                        if (alist.rows[i].cells[0].innerText==aName.value)
+                            acheck=0;  
+                        i++; 
+                    }                    
+                
+                    if (acheck)
+                    {
+                    
+                        arow = document.createElement("TR");
+                        atd1 = document.createElement("TD");
+                        atd2 = document.createElement("TD");
+                        atd3 = document.createElement("button");
+
+
+                       
+                        atd1.textContent = aName.value;
+                        atd2.textContent = aCost.value;
+                        atd3.textContent='Добавить';
+                        
+
+                        atd3.addEventListener("click", function (){AddBasket(atd1.textContent,atd2.textContent)});
+                        arow.onmouseover=function(){MouseOver(this);};
+                        arow.onmouseout=function(){MouseOut(this);};
+
+                        arow.append(atd1,atd2,atd3);
+
+                        
+                        
+                        alist.appendChild(arow);
+
+                        aName.value='';
+                        aCost.value='';
+                    }                    
+                }
+            }
+
+            function AddBasket(bname,bcost)
+            {
+                let brow;
+                let btd1;
+                let btd2;
+                let btd3;
+                let btd4;
+                let btd5;
+
+                let blist = document.getElementById("basket"); 
+
+                let bcheck=1;
+
+                let j=2;
+                let bnubmerofrows=blist.rows.length;
+
+                while ((j<bnubmerofrows) && (bcheck==1))
+                    {
+                        if (blist.rows[j].cells[0].innerText==bname)
+                        {
+                            blist.rows[j].cells[2].innerHTML=Number(blist.rows[j].cells[2].innerHTML)+1;                      
+                            bcheck=0;
+                        }
+                        j++; 
+                    }           
+
+                if (bcheck)
+                {
+                    brow = document.createElement("TR");
+                    btd1 = document.createElement("TD");
+                    btd2 = document.createElement("TD");
+                    btd3 = document.createElement("TD");
+                    btd4 = document.createElement("button");
+                    btd5 = document.createElement("button");
+
+                    brow.className="mytd";
+                       
+                    btd1.textContent = bname;
+                    btd2.textContent = bcost;
+
+                    btd3.textContent = 1;
+
+                    btd4.textContent='+';
+                    btd5.textContent='-';
+
+
+
+                    brow.append(btd1,btd2,btd3,btd4,btd5);
+
+                    btd4.addEventListener("click", function ()
+                                                    {
+                                                        let k=0;
+                                                        while (btd1.textContent!=blist.rows[k].cells[0].innerHTML)
+                                                            k++;                                                                
+                                                        blist.rows[k].cells[2].innerHTML=Number(blist.rows[k].cells[2].innerHTML)+1;
+                                                    }
+                                         );
+                    btd5.addEventListener("click", function ()
+                                                    {
+                                                        let k=0;
+                                                        while (btd1.textContent!=blist.rows[k].cells[0].innerHTML)
+                                                             k++; 
+
+                                                        if (Number(blist.rows[k].cells[2].innerHTML)>1) 
+                                                            blist.rows[k].cells[2].innerHTML=Number(blist.rows[k].cells[2].innerHTML)-1;
+                                                        else                                                            
+                                                            blist.deleteRow(k);
+                                                            
+                                                    }
+                                         );
+
+                    brow.onmouseover=function(){MouseOver(this);};
+                    brow.onmouseout=function(){MouseOut(this);};
+                        
+                    blist.appendChild(brow);
+                }
+            }    
+
+            function Sum()
+            {         
+                let blist = document.getElementById("basket"); 
+                let finalsum=0;
+                let nubmerofrows=blist.rows.length;
+                for (let j=2; j<blist.rows.length;j++)
+                    finalsum+=blist.rows[j].cells[1].innerText*blist.rows[j].cells[2].innerText;
+                
+                let result = document.getElementById('result');
+                result.innerHTML = "<hr/><p>Итого:</p>";
+			    result.innerHTML += finalsum+" руб.</p><hr/>";			                  
+            }   
+
+            function MouseOver(el)       
+            {
+                el.style.backgroundColor = "#689CD2"
+            }
+
+            function MouseOut(el)       
+            {
+                el.style.backgroundColor="#FFB240";   
+            }
+
+            function SortName()       
+            {
+                let list = document.getElementById("assortment");
+                let rows = list.rows;
+                
+                for (let i=3;i<(rows.length);i++)
+                    for (let j=3;j<(rows.length-1);j++)
+                    {
+                        if (rows[j].cells[0].innerHTML.toLowerCase() > rows[j+1].cells[0].innerHTML.toLowerCase())
+                        {
+                            list.insertBefore(rows[j + 1], rows[j])
+                        }
+                    }
+            }
+
+            function SortCost()       
+            {
+                let list = document.getElementById("assortment");
+                let rows = list.rows;
+                
+                for (let i=3;i<(rows.length);i++)
+                    for (let j=3;j<(rows.length-1);j++)
+                    {
+                        if (Number(rows[j].cells[1].innerHTML) > Number(rows[j+1].cells[1].innerHTML))
+                        {
+                            list.insertBefore(rows[j + 1], rows[j])
+                        }
+                    }
+            }
+
+        </script>
+
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar my-primary">
+                <a class="navbar-brand">Все для Дома</a> 
+            </nav>
+        </header>
+
+        <main class="container">
+            <div class="row mybg1">
+                <div class="col-12">
+                    <p>Добавить предметы в магазин</p>
+                </div>
+                <br/>
+                <div class="col-4">                    
+                    <form>
+                        <table>                        
+                            <tr>
+                                <td>Предмет</td> 
+                                <td><input type="text" id="name" value=""/></td>
+                            </tr>
+                            <tr>
+                                <td>Стоимость</td> 
+                                <td><input type="number" id="cost" value=""/></td>                                
+                            </tr>                      
+                        </table>
+                        <br/>
+                        <button type="button" onclick="AddAssortment()">Добавить</button>
+                    </form>
+                </div>
+            </div> 
+            
+            <div class="row mybg2">
+
+                <div class="col-6">
+                    <br/>
+                    <table id="assortment">
+                        <tr>
+                            <td>Сортировать:</td>
+                            <td><button type="button" onclick="SortName()">По имени</button></td>
+                            <td> <button type="button" onclick="SortCost()">По цене</button></td>
+                        </tr>
+                        <tr><th colspan="3">Ассортимент</th></tr>
+                        <tr>
+                            <td>Наименование</td>
+                            <td>Цена (руб.)</td>
+                            <td>Добавить</td>
+                        </tr>
+                    </table>
+                    <br/>
+                </div>
+
+                <div class="col-6">   
+                    <br/>        
+                    <table id="basket">
+                        <tr><th colspan="4">Ваш заказ</th></tr>
+                        <tr>
+                            <td>Наименование</td>
+                            <td>Цена (руб.)</td>
+                            <td>Количество</td>
+                            <td>+/-</td>
+                        </tr>
+                    </table>
+                    <button type="button" onclick="Sum()">Расчитать</button>
+                    <div id="result"> </div>        
+                    <br/>
+                </div>                
+            </div>
+        
+        </main>
+
+        <footer class="my-primary">
+            <div class="container">
+                <p class="footer-text">Телефон: 8-(495)-000-00-00</p>
+            </div>
+            </footer>
+    </body>
+</html>
