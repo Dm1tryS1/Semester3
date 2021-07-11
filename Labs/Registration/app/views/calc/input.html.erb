@@ -1,0 +1,9 @@
+<h1>Lab11</h1>
+<%= form_tag url_for(controller: 'calc', action: 'view'), method: 'get' do %>
+    <%= label_tag("Input N:") %>
+    <%= text_field_tag(:input) %> <br/>
+    <br/>
+    <%= submit_tag("Find") %>
+<% end %>
+<br/>
+<%= link_to 'Back', session_acc_path %>

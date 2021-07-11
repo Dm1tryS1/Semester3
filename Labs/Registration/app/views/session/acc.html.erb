@@ -1,0 +1,5 @@
+<h1>Hello, <%= current_user.name %>!</h1>
+
+<%= button_to 'Start calculation', calc_input_path, method: :get %><br>
+<%= button_to 'Show users', users_path, method: :get %><br>
+<%= button_to 'Logout', session_logout_path, method: :get %>

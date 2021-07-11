@@ -1,0 +1,22 @@
+<h2>Amount of numbers:</h2>
+<p id="result"><%= @result.size %></p>
+<h2>Numbers:</h2>
+<table border = '1px'>
+    <tr>
+        <th> № </th>
+        <th> Number </th>
+        <th> Square </th>
+    </tr>
+    <% if @result.any? %>
+    <% @result.each_index do |i| %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td><%= Math.sqrt(@result[i].to_i).round %></td>
+            <td><%= @result[i] %></td>
+        </tr>
+    <%end%>
+    <%end%>
+</table>
+</br>
+
+<%= link_to 'Back', calc_input_path %>
